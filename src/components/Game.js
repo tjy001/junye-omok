@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import queryString from 'query-string';
-import io from 'socket.io-client';
 import {SocketContext} from './socket';
 import { useHistory } from "react-router-dom";
 
