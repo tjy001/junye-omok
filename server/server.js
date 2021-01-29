@@ -9,7 +9,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {cors: {origin: "*"}}); 
 
-server.listen(port, () => console.log('Server started on port ' + port));
+server.listen(port, "0.0.0.0", function() {
+    console.log('Server started on port ' + port);
+}
+              
 let sess = [];
 
 if (process.env.NODE_ENV === 'production') {
