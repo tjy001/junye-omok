@@ -76,6 +76,19 @@ io.on("connection", (socket) => {
     socket.on("draw", (gameid) => {
         io.in(gameid).emit("nowinner", "It's a Draw!");
     })
+    
+    socket.on("again", (gameid) => {
+        socket.to(gameid).emit("invite", socket.name);
+    })
+
+    socket.on("accept", (gameid) => {
+        socket.to(gameid).emit("accepted", socket.name);
+        io.in(gameid).emit("startgame");
+    })
+
+    socket.on("declined", (gameid) => {
+        socket.to(gameid).emit("rejected", socket.name);
+    })
 
     socket.on('leave', (gameid) => {
         socket.to(gameid).emit("left", socket.name);
