@@ -19,7 +19,7 @@ ol, ul {
   float: left;
   font-size: min(4vw, 24px);
   font-weight: bold;
-  line-height: 34px;
+  line-height: min(4.5vw, 34px);
   height: 4.5vw;
   max-height: 34px;
   margin-right: -1px;
