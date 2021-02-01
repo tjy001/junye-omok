@@ -77,6 +77,7 @@ const Game = ({ location }) => {
 
     socket.on("guestjoined", (guestname) => {
       Swal.fire({
+        icon: 'warning',
         title: 'Player Joined',
         text: `${guestname} joined your game!`,
       });
@@ -124,22 +125,80 @@ const Game = ({ location }) => {
         winner: winner,
         prevwinner: winner
       })
-  
-      if (name === winner) {
-        alert("You Win!");
-      } else {
-        alert("You Lose!");
-      }
-      //Reset Start/Ready Button
+      Swal.fire({
+        title: (name === winner ? "You Win!" : "You Lose!"),
+        text: (name === winner ? "Well played!" : "Better luck next time..."),
+        confirmButtonText: "Play Again",
+        showDenyButton: true,
+        denyButtonText: "Cancel",
+        allowEnterKey: false,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+      }).then((again) => {
+        if (again.isConfirmed) {
+          socket.emit('again', gameid);
+        }
+      });
     })
   
     socket.on("nowinner", (msg) => {
-      alert(msg);
-      //Reset Start/Ready Button
+      Swal.fire({
+        title: "It's a Draw!",
+        confirmButtonText: "Play Again",
+        showDenyButton: true,
+        denyButtonText: "Cancel",
+        allowEnterKey: false,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+      }).then((again) => {
+        if (again.isConfirmed) {
+          socket.emit('again', gameid);
+        }
+      });
+    })
+    
+    socket.on("invite", (inviter) => {
+      Swal.fire({
+        icon: 'warning',
+        title: "Play again?",
+        text: `${inviter} invited you to a rematch! Accept?`,
+        showDenyButton: true,
+        confirmButtonText: "Accept",
+        denyButtonText: "Decline",
+        allowEnterKey: false,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+      }).then((accept) => {
+        if (accept.isConfirmed) {
+          socket.emit('accept', gameid);
+        } else {
+          socket.emit('declined', gameid);
+        }
+      })
+    })
+    
+    socket.on("accepted", (accepter) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Accepted!',
+        text: `${accepter} accepted your invitation for a rematch!`,
+      });
+    })
+
+    socket.on("rejected", (rejecter) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Rejected',
+        text: `${rejecter} declined your invitation for a rematch...`,
+        confirmButtonText: "Ok..."
+      });
     })
 
     socket.on("left", (leaver) => {
-      alert(leaver + " has disconnected...");
+      Swal.fire({
+        icon: 'warning',
+        text: `${leaver} has disconnected.`,
+      });
       if (!host) {
         history.push("/");
       }
