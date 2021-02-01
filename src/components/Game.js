@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import queryString from 'query-string';
 import {SocketContext} from './socket';
 import { useHistory } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 let size = 19;
 var omok;
@@ -34,23 +35,59 @@ const Game = ({ location }) => {
       socket.emit('joingame', {name, gameid});
     }
     socket.on('hosted', (gameid) => {
-      alert("Your Game ID is: " + gameid + "\nShare it with a friend!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Game Created!',
+        html: `Your Game ID is:<br>${gameid}<br>Share it with a friend!`,
+        confirmButtonText: "Copy Game ID",
+      }).then((copy) => {
+        if (copy.isConfirmed) {
+          try {
+            navigator.clipboard.writeText(gameid);
+            Swal.fire({
+              icon: 'success',
+              title: 'Copied!',
+            });
+          } catch (err) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops, something went wrong',
+              text: "You may get the Game ID from the URL instead",
+            });
+          }
+        }
+      });
     })
 
     socket.on('hostfail', (msg) => {
-      alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Creating Game',
+        text: msg,
+      });
     })
 
     socket.on("joined", (hostname) => {
-      alert("Successfully joined the game hosted by: " + hostname + "!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Game Joined!',
+        text: `Successfully joined ${hostname}'s game!`,
+      });
     })
 
     socket.on("guestjoined", (guestname) => {
-      alert(guestname + " joined your game!");
+      Swal.fire({
+        title: 'Player Joined',
+        text: `${guestname} joined your game!`,
+      });
     })
 
     socket.on("nogame", (msg) => {
-      alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Joining Game',
+        text: msg,
+      });
     })
   }, []);
 
