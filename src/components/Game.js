@@ -52,7 +52,9 @@ const Game = ({ location }) => {
             Swal.fire({
               icon: 'error',
               title: 'Oops, something went wrong',
-              html: `Please copy the Game ID Manually:<br><input type="text" value="${gameid}" readonly="readonly"><br>Alternatively, you may find the Game ID in the URL.`,
+              html: `Please copy the Game ID Manually:
+                <br><input type="text" value="${gameid}" readonly="readonly" style="text-align: center; width: 6em;">
+                <br>Alternatively, you may find the Game ID in the URL.`,
             });
           }
         }
