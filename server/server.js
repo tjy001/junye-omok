@@ -3,7 +3,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const path = require('path');
 
-const port = process.env.PORT;
+const port = process.env.PORT === undefined ? 3000 : process.env.PORT;
 const router = require("./router");
 
 const app = express();
