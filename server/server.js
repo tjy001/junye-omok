@@ -3,12 +3,16 @@ const http = require("http");
 const socketIo = require("socket.io");
 const path = require('path');
 
-const port = process.env.PORT === undefined ? 3000 : process.env.PORT;
-const router = require("./router");
-
+const port = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {cors: {origin: "*"}}); 
+
+const io = socketIo(server, { 
+    cors: { 
+        origin: "*", // Still fine for testing/personal project
+        methods: ["GET", "POST"]
+    }
+});
 
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static("public"));
@@ -22,8 +26,15 @@ app.get("/", (req, res) => {
     res.send({ response: "I am alive"}).status(200);
 });
 
-server.listen(port, "0.0.0.0", function() {
-    console.log('Server started on port ' + port);
+app.get("*", (req, res) => {
+    // Check if the request is not for a file inside the build folder
+    if (!req.url.startsWith("/static")) {
+         res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+    }
+});
+
+server.listen(port, function() {
+    console.log(`Server started on port ${port}`);
 });
               
 let sess = [];
@@ -101,4 +112,5 @@ io.on("connection", (socket) => {
     })
 })
 
+const router = require("./router");
 app.use(router);

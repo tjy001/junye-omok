@@ -1,13 +1,14 @@
 import io from 'socket.io-client';
 import React from 'react';
 
+const ENDPOINT = window.location.origin;
+
 var connectionOptions =  {
     "force new connection" : false,
     "reconnectionAttempts": "Infinity", 
     "timeout" : 10000,                  
-    "transports" : ["websocket", "polling", "flashsocket"]
+    "transports" : ["websocket", "polling"] // Removed 'flashsocket' as it's ancient
   };
-  var ENDPOINT = '';
 
 export const socket = io(ENDPOINT, connectionOptions);
 export const SocketContext = React.createContext();
