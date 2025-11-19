@@ -1,8 +1,9 @@
 ## Installation 
-### run `npm install` or `npm i`
+### run `npm install` or `npm i` from the root directory
+### `cd server` and run `npm install` (or `npm i`)
 
 ## Running the app
-### run `npm start`
+### run `npm start` from the root directory
 The app should be started on `localhost:3000` by default
 
 ## Creating a game session
